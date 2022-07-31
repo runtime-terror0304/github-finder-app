@@ -20,6 +20,7 @@ export const GithubProvider = ({children}) => {
     const initialState = {
         users: [],
         user: {},
+        repos: [],
         loading: false
     }
 
@@ -116,6 +117,35 @@ export const GithubProvider = ({children}) => {
 
     }
 
+    //Get user repos
+    const getUserRepos = async (login) => {
+
+        setLoading();
+
+        // const params = new URLSearchParams({
+        //     q:text
+        // })
+
+
+        // console.log(params);
+
+        const res = await fetch(`${GITHUB_URL}/users/${login}/repos?sort=created&per_page=10`, {
+            headers: {
+                Authorization: `Bearer ${GITHUB_TOKEN}`
+            }
+        })
+
+        const data = await res.json()
+
+        //yaha dispatcher ko call kiya hai...action wala object bhej kr...jismei type batayega ki krna kya hai...aur payload is the data jo bhejna hai..ya jo state mei dalna hai..
+        dispatch({
+            //this is an action object
+            type: 'GET_REPOS',
+            payload: data,
+        })
+        //payload is conventional naming scheme
+    }
+
     const clearUsers = () => {
         dispatch({
             type: 'CLEAR_USERS'
@@ -135,8 +165,11 @@ export const GithubProvider = ({children}) => {
         users: state.users,
         loading: state.loading,
         user: state.user,
+        repos: state.repos,
         searchUsers,
-        clearUsers
+        clearUsers,
+        getUser,
+        getUserRepos
     }}>
         {children}
     </GithubContext.Provider>
