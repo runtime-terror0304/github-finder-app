@@ -4,17 +4,33 @@ import GithubContext from '../context/github/GithubContext'
 import {useParams, Link} from 'react-router-dom'
 import Spinner from '../components/layout/Spinner'
 import RepoList from '../components/repos/RepoList'
+import {getUserAndRepos} from '../context/github/GithubActions'
 
 //react-router-dom mei agar params ko access krna ho to useParams hook hota react router dom mei, ussko import krte
 function User() {
-    const {getUser, user, loading, getUserRepos, repos} = useContext(GithubContext)
+    const {user, loading, repos, dispatch} = useContext(GithubContext)
 
     const params = useParams()
 
+    //we can't have the the callback function async so alag se function banana padha andr aur ussey call kr rahe.
     useEffect(() => {
-        getUser(params.login)
-        getUserRepos(params.login)
-    }, [])
+        dispatch({
+            type: 'SET_LOADING'
+        })
+
+        //yeh async function bana diya to get the data 
+        const getUserData = async () => {
+            const userData = await getUserAndRepos(params.login)
+            dispatch({
+                type: 'GET_USER_AND_REPOS',
+                payload: userData
+            })
+        }
+
+        //yaha uss function ko call kr diya
+        getUserData()
+    }, [dispatch, params.login])
+    //pehley jab humare paas context functions they, toh woh har baar new bannte the jab bhi state change hoti thi aur woh state change krne k liye hi hotte the toh yaha dependency mei woh sb dalte jisske change se yeh function trigger hota so woh infinite loop bana deta.
 
     const {
         name,
