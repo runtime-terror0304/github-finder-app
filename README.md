@@ -2,7 +2,7 @@
 # React Github Finder App
 
 Finding Github members using a React app and showing their information. This project uses TailwindCSS and daisyUI for styling and appearance. Guthub API was used to get the required information about the users and their repos.
-The Application has been deployed using vercel and can be access through the given link: https://github-finder-app-final.vercel.app/
+The Application has been deployed using vercel and can be access through the given link: https://github-finder-app-bhnu.vercel.app/
 ## Screenshots
 
 ### Home page
